@@ -6,22 +6,17 @@ import java.time.format.DateTimeFormatter;
 
 public class ScoreBoard extends JPanel implements ActionListener {
     private final ScoreList scores;
-    private final JPanel buttonPanel;
-    private final JButton easy;
-    private final JButton medium;
-    private final JButton hard;
-    private final CardLayout cards;
     private final JPanel scoresPanel;
     //index 0 = easy   1 = medium   2 = hard
     private final JPanel[] scoreDisplays;
     public ScoreBoard(){
         super();
         scores = ScoreList.loadFromFile();
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        easy = new JButton("Easy");
-        medium = new JButton("Medium");
-        hard = new JButton("Hard");
-        cards = new CardLayout();
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JButton easy = new JButton("Easy");
+        JButton medium = new JButton("Medium");
+        JButton hard = new JButton("Hard");
+        CardLayout cards = new CardLayout();
         scoresPanel = new JPanel(cards);
         scoreDisplays = new JPanel[3];
 
