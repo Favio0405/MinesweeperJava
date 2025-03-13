@@ -9,8 +9,9 @@ public class BottomBar extends JPanel{
     public BottomBar(){
         setLayout(new BorderLayout());
         toMenuButton = new JButton("Difficulty");
-        toMenuButton.addActionListener(e -> {listener.toMenu();});
+        toMenuButton.addActionListener(e -> listener.toMenu());
         scoresButton = new JButton("Best Scores");
+        scoresButton.addActionListener(e -> listener.scoreBoard());
         bestScore = new JLabel();
         add(toMenuButton, BorderLayout.WEST);
         add(scoresButton, BorderLayout.CENTER);

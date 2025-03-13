@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDateTime;
 import java.util.Random;
 import javax.swing.Timer;
 
@@ -22,16 +23,18 @@ public class GamePanel extends JPanel{
     private final int ROWS;
     private final int COLUMNS;
     private final int MINES;
+    private final String DIFFICULTY;
     private final int NUMBER_OF_NUMBERED_SQUARES;
     private int uncoveredCount;
     private int unflaggedMines;
     private int time;
 
-    public GamePanel(int rows, int columns, int mines){
+    public GamePanel(int rows, int columns, int mines, String DIFFICULTY){
         super();
         this.ROWS = rows;
         this.COLUMNS = columns;
         this.MINES = mines;
+        this.DIFFICULTY = DIFFICULTY;
         this.NUMBER_OF_NUMBERED_SQUARES = (ROWS * COLUMNS) - MINES;
         this.gameOver = false;
         this.unflaggedMines = MINES;
@@ -263,14 +266,17 @@ public class GamePanel extends JPanel{
         }
     }
     private void gameOverLoss(){
+        timer.stop();
         removeGridButtonListeners();
         topButton.setLoserIcon();
         gameOver = true;
     }
     private void gameOverWin(){
+        timer.stop();
         removeGridButtonListeners();
         topButton.setWinnerIcon();
         gameOver = true;
+        panelListener.addScore(new Score(time, LocalDateTime.now(), DIFFICULTY));
     }
 
     private void removeGridButtonListeners(){
@@ -308,7 +314,7 @@ public class GamePanel extends JPanel{
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if(!button.isCovered && button.number > 0) activateNumber(button);
                     else activateButton(button);
-                } else if (SwingUtilities.isRightMouseButton(e)) {
+                } else if (SwingUtilities.isRightMouseButton(e) && button.isCovered) {
                     if(button.isFlagged()) unflaggedMines++;
                     else unflaggedMines--;
                     if(unflaggedMines > 999) mineCounter.setNumber(999);
@@ -355,7 +361,7 @@ public class GamePanel extends JPanel{
             Component comp = SwingUtilities.getDeepestComponentAt(topMenu, point.x, point.y);
             if(comp instanceof TopButton){
                 if(SwingUtilities.isLeftMouseButton(e)) {
-                    panelListener.reset(ROWS, COLUMNS, MINES);
+                    panelListener.reset(ROWS, COLUMNS, MINES, DIFFICULTY);
                 }
             }
         }

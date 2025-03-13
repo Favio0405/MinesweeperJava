@@ -9,6 +9,7 @@ public class MenuPanel extends JPanel {
     private final JFormattedTextField rows;
     private final JFormattedTextField columns;
     private final JFormattedTextField minesIn;
+    private String difficulty;
     MenuListener listener;
     public MenuPanel(){
         super();
@@ -18,15 +19,26 @@ public class MenuPanel extends JPanel {
         JButton[] buttons = new JButton[3];
         buttons[0] = new JButton("Easy");
         buttons[0].addActionListener(e -> {
-            this.boardSize[0] = 9; this.boardSize[1] = 9; mines = 10; notifyDifficultySelection("VALID");});
+            this.boardSize[0] = 9;
+            this.boardSize[1] = 9; mines = 10;
+            this.difficulty = "EASY";
+            notifyDifficultySelection("VALID");});
         topPanel.add(buttons[0]);
         buttons[1] = new JButton("Medium");
         buttons[1].addActionListener(e -> {
-            this.boardSize[0] = 16; this.boardSize[1] = 16; mines = 40; notifyDifficultySelection("VALID");});
+            this.boardSize[0] = 16;
+            this.boardSize[1] = 16;
+            mines = 40;
+            this.difficulty = "MEDIUM";
+            notifyDifficultySelection("VALID");});
         topPanel.add(buttons[1]);
         buttons[2] = new JButton("Hard");
         buttons[2].addActionListener(e -> {
-            this.boardSize[0] = 30; this.boardSize[1] = 16; mines = 99; notifyDifficultySelection("VALID");});
+            this.boardSize[0] = 30;
+            this.boardSize[1] = 16;
+            mines = 99;
+            this.difficulty = "HARD";
+            notifyDifficultySelection("VALID");});
         topPanel.add(buttons[2]);
         JPanel bottomPanel = new JPanel(new FlowLayout());
         NumberFormat format = NumberFormat.getIntegerInstance();
@@ -62,6 +74,7 @@ public class MenuPanel extends JPanel {
             boardSize[0] = inputRows;
             boardSize[1] = inputColumns;
             mines = inputMines;
+            difficulty = "CUSTOM";
             notifyDifficultySelection("VALID");
         });
         bottomPanel.add(custom);
@@ -80,7 +93,7 @@ public class MenuPanel extends JPanel {
     }
     private void notifyDifficultySelection(String validSelection){
         if(listener != null && validSelection.equals("VALID")){
-            listener.createGame(boardSize, mines);
+            listener.createGame(boardSize, mines, difficulty);
         }
         else if(listener != null){
             listener.invalidSelection(validSelection);

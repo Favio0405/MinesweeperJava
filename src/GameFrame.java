@@ -8,6 +8,8 @@ public class GameFrame extends JFrame implements MenuListener, GamePanelListener
     private final JDialog menuDialog;
     private final JDialog errorDialog;
     private final JLabel errorLabel;
+    private final ScoreBoard scoreBoard;
+    private final JDialog scoreDialog;
 
     public GameFrame(){
         super();
@@ -32,6 +34,10 @@ public class GameFrame extends JFrame implements MenuListener, GamePanelListener
         errorDialog.add(errorLabel, BorderLayout.NORTH);
         errorDialog.add(okButton, BorderLayout.SOUTH);
 
+        scoreBoard = new ScoreBoard();
+        scoreDialog = new JDialog(this, "Scoreboard", true);
+        scoreDialog.add(scoreBoard);
+
         bottomBar = new BottomBar();
         bottomBar.setListener(this);
 
@@ -41,12 +47,12 @@ public class GameFrame extends JFrame implements MenuListener, GamePanelListener
     }
 
     @Override
-    public void createGame(int[] boardSize, int mines) {
+    public void createGame(int[] boardSize, int mines, String difficulty) {
         if(board != null){
             remove(board);
             board = null;
         }
-        board = new GamePanel(boardSize[0], boardSize[1], mines);
+        board = new GamePanel(boardSize[0], boardSize[1], mines, difficulty);
         board.setListener(this);
         remove(menu);
         add(board);
@@ -72,13 +78,18 @@ public class GameFrame extends JFrame implements MenuListener, GamePanelListener
     }
 
     @Override
-    public void reset(int rows, int columns, int mines) {
+    public void reset(int rows, int columns, int mines, String difficulty) {
         remove(board);
-        board = new GamePanel(rows, columns, mines);
+        board = new GamePanel(rows, columns, mines, difficulty);
         board.setListener(this);
         add(board);
         revalidate();
         repaint();
+    }
+
+    @Override
+    public void addScore(Score score) {
+        scoreBoard.addScore(score);
     }
 
     @Override
@@ -88,5 +99,13 @@ public class GameFrame extends JFrame implements MenuListener, GamePanelListener
         menuDialog.setResizable(false);
         menuDialog.setLocationRelativeTo(this);
         menuDialog.setVisible(true);
+    }
+
+    @Override
+    public void scoreBoard() {
+        scoreDialog.pack();
+        scoreDialog.setResizable(false);
+        scoreDialog.setLocationRelativeTo(this);
+        scoreDialog.setVisible(true);
     }
 }
