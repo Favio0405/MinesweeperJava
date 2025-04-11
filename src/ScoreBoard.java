@@ -1,34 +1,36 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 
-public class ScoreBoard extends JPanel implements ActionListener {
+public class ScoreBoard extends JPanel{
     private final ScoreList scores;
     private final JPanel scoresPanel;
     //index 0 = easy   1 = medium   2 = hard
     private final JPanel[] scoreDisplays;
+    CardLayout cards;
     public ScoreBoard(){
         super();
         scores = ScoreList.loadFromFile();
+        cards = new CardLayout();
+        scoresPanel = new JPanel(cards);
+        scoreDisplays = new JPanel[3];
+
+        setLayout(new BorderLayout());
+        add(scoresPanel, BorderLayout.SOUTH);
+
+        initializeScores();
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         JButton easy = new JButton("Easy");
         JButton medium = new JButton("Medium");
         JButton hard = new JButton("Hard");
-        CardLayout cards = new CardLayout();
-        scoresPanel = new JPanel(cards);
-        scoreDisplays = new JPanel[3];
-
         buttonPanel.add(easy);
         buttonPanel.add(medium);
         buttonPanel.add(hard);
-
-        setLayout(new BorderLayout());
         add(buttonPanel, BorderLayout.NORTH);
-        add(scoresPanel, BorderLayout.SOUTH);
-
-        initializeScores();
+        easy.addActionListener(e -> cards.show(scoresPanel, "EASY"));
+        medium.addActionListener(e -> cards.show(scoresPanel, "MEDIUM"));
+        hard.addActionListener(e -> cards.show(scoresPanel, "HARD"));
     }
 
     private void initializeScores(){
@@ -63,9 +65,5 @@ public class ScoreBoard extends JPanel implements ActionListener {
         scores.addScore(score);
         scores.saveToFile();
         initializeScores();
-    }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }
